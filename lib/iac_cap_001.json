@@ -4,7 +4,7 @@
         "serviceRequestNumber": "SR123456"
     },    
     "displayName": "IaC_cap_001 - Block legacy authentication",
-    "state": "enabled",
+    "state": "enabledForReportingButNotEnforced",
     "conditions": {
         "clientAppTypes": ["exchangeActiveSync", "other"],
         "applications": {

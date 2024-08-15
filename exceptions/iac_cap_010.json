@@ -4,7 +4,7 @@
         "serviceRequestNumber": "SR124586"
     },
     "displayName": "IaC_cap_010 - Require password change for high-risk users",
-    "state": "enabled",
+    "state": "enabledForReportingButNotEnforced",
     "conditions": {
         "clientAppTypes": [
             "all"

@@ -4,7 +4,7 @@
         "serviceRequestNumber": "SR123456"
     },
     "displayName": "IaC_cap_013 - Access to Exchange Online requires MFA",
-    "state": "enabled",
+    "state": "enabledForReportingButNotEnforced",
     "conditions": {
         "clientAppTypes": ["mobileAppsAndDesktopClients","browser"],
         "applications": {

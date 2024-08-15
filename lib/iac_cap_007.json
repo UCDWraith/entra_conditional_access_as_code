@@ -4,7 +4,7 @@
         "serviceRequestNumber": "SR123456"
     },
     "displayName": "IaC_cap_007 - Require multifactor authentication for all users",
-    "state": "enabled",
+    "state": "enabledForReportingButNotEnforced",
     "conditions": {
         "clientAppTypes": ["all"],
         "applications": {

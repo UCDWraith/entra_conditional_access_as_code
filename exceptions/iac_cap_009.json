@@ -4,7 +4,7 @@
         "serviceRequestNumber": "SR123789"
     },
     "displayName": "IaC_cap_009 - Require multifactor authentication for risky sign-ins",
-    "state": "enabled",
+    "state": "enabledForReportingButNotEnforced",
     "conditions": {
         "clientAppTypes": ["all"],
         "signInRiskLevels": ["high", "medium"],

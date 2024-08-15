@@ -4,7 +4,7 @@
         "serviceRequestNumber": "SR123456"
     },
     "displayName": "IaC_cap_012 - Securing security info registration",
-    "state": "enabled",
+    "state": "enabledForReportingButNotEnforced",
     "conditions": {
         "clientAppTypes": ["all"],
         "applications": {

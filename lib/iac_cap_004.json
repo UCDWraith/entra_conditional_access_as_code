@@ -4,7 +4,7 @@
         "serviceRequestNumber": "SR123456"
     },
     "displayName": "IaC_cap_004 - Require multifactor authentication for Azure management",
-    "state": "enabled",
+    "state": "enabledForReportingButNotEnforced",
     "conditions": {
         "clientAppTypes": ["all"],
         "applications": {

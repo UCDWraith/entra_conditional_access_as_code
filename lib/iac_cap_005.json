@@ -4,7 +4,7 @@
         "serviceRequestNumber": "SR123456"
     },
     "displayName": "IaC_cap_005 - Require multifactor authentication for Microsoft admin portals",
-    "state": "enabled",
+    "state": "enabledForReportingButNotEnforced",
     "conditions": {
         "clientAppTypes": ["all"],
         "applications": {

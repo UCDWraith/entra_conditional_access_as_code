@@ -1,0 +1,42 @@
+{
+    "Tracking_Data": {
+        "purpose": "IaC_cap_010 - Require password change for high-risk users",
+        "serviceRequestNumber": "SR124586"
+    },
+    "displayName": "IaC_cap_010 - Require password change for high-risk users",
+    "state": "enabled",
+    "conditions": {
+        "clientAppTypes": [
+            "all"
+        ],
+        "userRiskLevels": [
+            "high"
+        ],
+        "applications": {
+            "includeApplications": [
+                "all"
+            ]
+        },
+        "users": {
+            "includeUsers": [
+                "All"
+            ],
+            "excludeUsers": [
+                "<BREAK-GLASS-ACCOUNT-ID>"
+            ]
+        }
+    },
+    "grantControls": {
+        "operator": "AND",
+        "builtInControls": [
+            "mfa",
+            "passwordChange"
+        ]
+    },
+    "sessionControls": {
+        "signInFrequency": {
+            "frequencyInterval": "everyTime",
+            "isEnabled": true
+        }
+    }    
+}

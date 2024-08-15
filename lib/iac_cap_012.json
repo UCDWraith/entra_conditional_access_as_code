@@ -1,0 +1,27 @@
+{
+    "Tracking_Data": {
+        "purpose": "IaC_cap_012 - Securing security info registration",
+        "serviceRequestNumber": "SR123456"
+    },
+    "displayName": "IaC_cap_012 - Securing security info registration",
+    "state": "enabled",
+    "conditions": {
+        "clientAppTypes": ["all"],
+        "applications": {
+            "includeUserActions": ["urn:user:registersecurityinfo"]
+        },
+        "locations": {
+            "excludeLocations": ["AllTrusted"],
+            "includeLocations": ["All"]
+        },
+        "users": {
+            "excludeUsers": ["GuestsOrExternalUsers", "<BREAK-GLASS-ACCOUNT-ID>"],
+            "includeUsers": ["All"],
+            "excludeRoles": ["62e90394-69f5-4237-9190-012177145e10"]
+        }
+    },
+    "grantControls": {
+        "operator": "OR",
+        "builtInControls": ["mfa"]
+    }
+}

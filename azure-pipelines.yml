@@ -1,0 +1,128 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+- name: environment
+  displayName: Environment
+  type: string
+  default: az_dev_tenant
+  values:
+  - az_prod_tenant
+  - az_dev_tenant
+
+variables:
+- group: ${{parameters.environment}}-entra-conditional-access
+
+jobs:
+  - job: terraform_pipeline
+    steps:
+      # - task: AzureCLI@2
+      #   inputs:
+      #    azureSubscription: $(svc_connection)
+      #    scriptType: bash
+      #    scriptLocation: inlineScript
+      #    inlineScript: |
+      #      echo "##vso[task.setvariable variable=ARM_SAS_TOKEN]$(az keyvault secret show --name sas-token --vault-name <AZURE-KEY-VAULT> --query value -o tsv)"
+      
+      - task: AzureCLI@2
+        displayName: 'Azure CLI to create ACCESS_TOKEN'
+        inputs:
+          azureSubscription: $(svc_connection)
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            az account get-access-token --resource https://graph.microsoft.com > token.json
+            ACCESS_TOKEN=$(jq -r .accessToken token.json)
+            echo "##vso[task.setvariable variable=ACCESS_TOKEN]$ACCESS_TOKEN"
+            
+      - task: TerraformInstaller@1
+        displayName: 'tfinstall'
+        inputs:
+          azureSubscription: $(svc_connection)
+          terraformVersion: 'latest'
+
+      - task: TerraformTaskV4@4
+        displayName: 'tfinit'
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          backendServiceArm: $(svc_connection)
+          backendAzureRmResourceGroupName: $(backendAzureRmResourceGroupName)
+          backendAzureRmStorageAccountName: $(backendAzureRmStorageAccountName)
+          backendAzureRmContainerName: $(backendAzureRmContainerName)
+          backendAzureRmKey: $(backendAzureRmKey)
+          backendAzureRmSasToken: $(ARM_SAS_TOKEN)
+
+      - task: TerraformTaskV4@4
+        displayName: 'tfvalidate'
+        inputs:
+          provider: 'azurerm'
+          command: 'validate'
+
+      - task: TerraformTaskV4@4
+        displayName: 'tfplan'
+        inputs:
+          environmentServiceNameAzureRM: $(svc_connection)
+          provider: 'azurerm'
+          command: 'plan'
+          commandOptions: '-out=$(Pipeline.Workspace)/s/$(plan_file) -var "access_token=$(ACCESS_TOKEN)"'
+
+      # Write terraform show output in default format to a markdown file
+      - task: TerraformTaskV4@4
+        name: TerraformShow
+        displayName: 'tfshow'
+        inputs:
+          environmentServiceNameAzureRM: $(svc_connection)
+          provider: 'azurerm'
+          command: 'show'
+          commandOptions: '$(Pipeline.Workspace)/s/$(plan_file) -no-color'
+          outputTo: 'file'
+          outputFormat: 'default'
+          fileName: '$(Pipeline.Workspace)/s/TerraformPlan.md'
+          workingDirectory: $(System.DefaultWorkingDirectory)
+
+      # Display plan in the pipeline build summary
+      - task: Bash@3
+        displayName: 'Create plan summary file'
+        inputs:
+          targetType: 'inline'
+          workingDirectory: '$(System.DefaultWorkingDirectory)'
+          script: |
+            ls -la
+            sed -i '1 i\```' TerraformPlan.md
+            echo '```' >> TerraformPlan.md
+            echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/TerraformPlan.md"
+ 
+      - task: CopyFiles@2
+        displayName: 'Copy Files to: release'
+        inputs:
+          SourceFolder: '$(Pipeline.Workspace)/s'
+          Contents: |
+            **/*.tf*
+            **/*.json
+            .terraform.lock.hcl
+            metadata.txt
+            TerraformPlan.md
+            $(System.DefaultWorkingDirectory)/environments/$(env)/**
+          TargetFolder: '$(Pipeline.Workspace)/s/release/$(env)'
+          OverWrite: true
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Artifact: Release'
+        inputs:
+          PathtoPublish: '$(Pipeline.Workspace)/s/release/$(env)'
+          ArtifactName: $(env)
+          publishLocation: 'Container'
+
+      - script: |
+          echo "##vso[build.addbuildtag]$(env)"
+        displayName: 'Add build tag to repo'
+      

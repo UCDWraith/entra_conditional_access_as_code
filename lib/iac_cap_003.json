@@ -1,0 +1,26 @@
+{
+    "Tracking_Data": {
+        "purpose": "IaC_cap_003 - Block access for unknown or unsupported device platform",
+        "serviceRequestNumber": "SR123456"
+    }, 
+    "displayName": "IaC_cap_003 - Block access for unknown or unsupported device platform",
+    "state": "enabled",
+    "conditions": {
+        "clientAppTypes": ["all"],
+        "applications": {
+            "includeApplications": ["All"]
+        },
+        "platforms": {
+            "excludePlatforms": ["android", "iOS", "windows", "macOS", "linux", "windowsPhone"],
+            "includePlatforms": ["all"]
+        },
+        "users": {
+            "includeUsers": ["All"],
+            "excludeUsers": ["<BREAK-GLASS-ACCOUNT-ID>"]
+        }
+    },
+    "grantControls": {
+        "operator": "OR",
+        "builtInControls": ["block"]
+    }
+}

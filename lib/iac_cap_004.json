@@ -1,0 +1,22 @@
+{
+    "Tracking_Data": {
+        "purpose": "IaC_cap_004 - Require multifactor authentication for Azure management",
+        "serviceRequestNumber": "SR123456"
+    },
+    "displayName": "IaC_cap_004 - Require multifactor authentication for Azure management",
+    "state": "enabled",
+    "conditions": {
+        "clientAppTypes": ["all"],
+        "applications": {
+            "includeApplications": ["797f4846-ba00-4fd7-ba43-dac1f8f63013"]
+        },
+        "users": {
+            "includeUsers": ["All"],
+            "excludeUsers": ["<BREAK-GLASS-ACCOUNT-ID>"]
+        }
+    },
+    "grantControls": {
+        "operator": "OR",
+        "builtInControls": ["mfa"]
+    }
+}

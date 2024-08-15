@@ -1,0 +1,22 @@
+{
+    "Tracking_Data": {
+        "purpose": "IaC_cap_007 - Require multifactor authentication for all users",
+        "serviceRequestNumber": "SR123456"
+    },
+    "displayName": "IaC_cap_007 - Require multifactor authentication for all users",
+    "state": "enabled",
+    "conditions": {
+        "clientAppTypes": ["all"],
+        "applications": {
+            "includeApplications": ["All"]
+        },
+        "users": {
+            "includeUsers": ["All"],
+            "excludeUsers": ["<BREAK-GLASS-ACCOUNT-ID>"]
+        }
+    },
+    "grantControls": {
+        "operator": "OR",
+        "builtInControls": ["mfa"]
+    }
+}

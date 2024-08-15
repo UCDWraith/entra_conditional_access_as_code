@@ -1,0 +1,32 @@
+{
+    "Tracking_Data": {
+        "purpose": "IaC_cap_009 - Require multifactor authentication for risky sign-ins",
+        "serviceRequestNumber": "SR123789"
+    },
+    "displayName": "IaC_cap_009 - Require multifactor authentication for risky sign-ins",
+    "state": "enabled",
+    "conditions": {
+        "clientAppTypes": ["all"],
+        "signInRiskLevels": ["high", "medium"],
+        "applications": {
+            "includeApplications": ["All"]
+        },
+        "users": {
+            "includeUsers": ["All"],
+            "excludeUsers": ["<BREAK-GLASS-ACCOUNT-ID>"]
+        }
+    },
+    "grantControls": {
+        "operator": "OR",
+        "builtInControls": ["mfa"]
+    },
+    "sessionControls": {
+        "signInFrequency": {
+            "value": null,
+            "type": null,
+            "authenticationType": "primaryAndSecondaryAuthentication",
+            "frequencyInterval": "everyTime",
+            "isEnabled": true
+        }
+    }
+}
